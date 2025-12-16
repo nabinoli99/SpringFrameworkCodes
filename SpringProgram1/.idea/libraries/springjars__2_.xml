@@ -1,10 +1,10 @@
 <component name="libraryTable">
   <library name="springjars (2)">
     <CLASSES>
-      <root url="file://$PROJECT_DIR$/springjars" />
+      <root url="file://$PROJECT_DIR$/../Spring Program2/springjars" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
-    <jarDirectory url="file://$PROJECT_DIR$/springjars" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/../Spring Program2/springjars" recursive="false" />
   </library>
 </component>
