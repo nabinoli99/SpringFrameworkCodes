@@ -8,5 +8,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="springjars" level="project" />
+    <orderEntry type="library" name="springjars (2)" level="project" />
   </component>
 </module>

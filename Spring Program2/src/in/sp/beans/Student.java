@@ -2,16 +2,16 @@ package in.sp.beans;
 
 public class Student
 {
-    private String Name;
+    private String name;
     private int rollno;
     private String email;
 
     public String getName() {
-        return Name;
+        return name;
     }
 
     public void setName(String name) {
-        Name = name;
+        this.name = name;
     }
 
     public int getRollno() {
@@ -29,4 +29,13 @@ public class Student
     public void setEmail(String email) {
         this.email = email;
     }
+
+    public void display()
+    {
+        System.out.println("Name: "+name);
+        System.out.println("Roll no: "+rollno);
+        System.out.println("Email: "+email);
+//        System.out.println("\n");
+    }
+
 }
