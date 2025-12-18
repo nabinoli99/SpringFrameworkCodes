@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+<!--    <bean id = "addrId" class="in.sp.beans.Address">-->
+<!--        <property name="houseno" value="89"/>-->
+<!--        <property name="city" value="Kathmandu"/>-->
+<!--        <property name="pincode" value="1689"/>-->
+
+<!--    </bean>-->
+    <bean id = "addrId" class="in.sp.beans.Address">
+        <constructor-arg value="223"/>
+        <constructor-arg value="Kathamndu"/>
+        <constructor-arg value="2387"/>
+    </bean>
+<!--    <bean id="StdId" class="in.sp.beans.Student">-->
+<!--        <property name="name" value="Nabin Oli"/>-->
+<!--        <property name="rollno" value="493"/>-->
+<!--        <property name="address" ref ="addrId"/>-->
+<!--    </bean>-->
+    <bean id="StdId" class="in.sp.beans.Student">
+        <constructor-arg value="Nabin Oli"/>
+        <constructor-arg value="19"/>
+        <constructor-arg ref="addrId"/>
+    </bean>
+
+</beans>
