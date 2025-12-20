@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean class="in.sp.beans.Address" id="addrId1" autowire-candidate="false">
+        <constructor-arg value="100"/>
+        <constructor-arg value="Butwal"/>
+        <constructor-arg value="33400"/>
+    </bean>
+
+    <bean class="in.sp.beans.Address" id="addrId2">
+        <constructor-arg value="200"/>
+        <constructor-arg value="Dang"/>
+        <constructor-arg value="22400"/>
+    </bean>
+
+    <bean class="in.sp.beans.Student" id = "stdId" autowire="constructor">
+      <constructor-arg value="Nabin Oli" index="0"/>
+        <constructor-arg value="19" index="1"/>
+    </bean>
+</beans>
