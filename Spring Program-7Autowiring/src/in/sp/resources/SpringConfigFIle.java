@@ -28,6 +28,18 @@ public class SpringConfigFIle
     }
 
     @Bean
+    public Address createAddrobj()
+    {
+        Address addr = new Address();
+        addr.sethho
+        addr.setCity("Ghorahi");
+        addr.setPincode(356);
+
+        return addr;
+
+    }
+
+    @Bean
     public Student createStdObj()
     {
         Student std = new Student();
@@ -35,4 +47,5 @@ public class SpringConfigFIle
         std.setRollno(19);
         return std;
     }
+
 }

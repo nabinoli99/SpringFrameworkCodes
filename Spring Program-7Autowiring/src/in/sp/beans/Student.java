@@ -33,4 +33,8 @@ public class Student
         System.out.println("Rollno:"+rollno);
         System.out.println("Address: "+address);
     }
+    public void displayfunc()
+    {
+        System.out.println("Name");
+    }
 }
