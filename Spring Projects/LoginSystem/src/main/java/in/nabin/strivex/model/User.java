@@ -12,9 +12,4 @@ public class User {
     private String email;
     private String password;
     private String city;
-
-//    // IMPORTANT: You must have a No-Argument Constructor
-//    public User() {}
-
-
 }
