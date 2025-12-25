@@ -1,0 +1,73 @@
+/* Direct Tag Targeting - No HTML changes needed */
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #2d3436;
+}
+
+/* Titles */
+h1, h3 {
+    margin-bottom: 20px;
+    font-weight: 300;
+    color: #4834d4;
+}
+
+/* The "Card" Look - Applies to Form (Login) and P (Profile/Success) */
+form, p {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+    width: 320px;
+    text-align: center;
+    line-height: 1.8;
+}
+
+/* Inputs for Login and Profile Editing */
+input {
+    width: 100%;
+    padding: 12px;
+    margin: 8px 0;
+    border: 1px solid #dfe6e9;
+    border-radius: 6px;
+    display: block;
+    box-sizing: border-box;
+}
+
+/* Buttons and Links */
+button, a {
+    display: inline-block;
+    text-decoration: none;
+    background: #4834d4;
+    color: white !important;
+    padding: 10px 20px;
+    border-radius: 6px;
+    border: none;
+    font-size: 14px;
+    cursor: pointer;
+    transition: 0.3s;
+    margin-top: 10px;
+}
+
+button:hover, a:hover {
+    background: #686de0;
+    transform: translateY(-1px);
+}
+
+/* Specifically for the Logout/Red links */
+a[href*="logout"], a[href="/login"] {
+    background: #eb4d4b;
+}
+
+a[href*="logout"]:hover {
+    background: #ff7675;
+}

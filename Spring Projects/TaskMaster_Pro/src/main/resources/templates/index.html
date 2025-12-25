@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>TaskMaster Pro | Dashboard</title>
+    <style>
+        /* CSS Variables make it easy to change colors later */
+        :root {
+            --primary: #4f46e5;
+            --danger: #ef4444;
+            --bg: #f9fafb;
+            --card: #ffffff;
+            --text: #111827;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container { width: 100%; max-width: 800px; }
+
+        /* Styling the Input Card */
+        .form-card {
+            background: var(--card);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            box-sizing: border-box; /* Prevents input from overflowing */
+        }
+
+        button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        /* Styling the Task Table */
+        table {
+            width: 100%;
+            background: var(--card);
+            border-collapse: collapse;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        th { background: #f3f4f6; padding: 16px; text-align: left; }
+        td { padding: 16px; border-top: 1px solid #f3f4f6; }
+
+        .btn-delete {
+            color: var(--danger);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+
+        .btn-delete:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>TaskMaster Pro</h1>
+
+    <div class="form-card">
+        <h3>Create New Task</h3>
+        <form th:action="@{/save}" method="post">
+            <input type="text" name="title" placeholder="What needs to be done?" required>
+            <input type="text" name="description" placeholder="Add more details...">
+            <button type="submit">Add Task to Database</button>
+        </form>
+    </div>
+
+    <table>
+        <thead>
+        <tr>
+            <th>Task Title</th>
+            <th>Description</th>
+            <th style="text-align: center;">Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="task : ${tasks}">
+            <td th:text="${task.title}" style="font-weight: 500;"></td>
+            <td th:text="${task.description}" style="color: #6b7280;"></td>
+            <td style="text-align: center;">
+                <a th:href="@{'/delete/' + ${task.id}}" class="btn-delete">Remove</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>
