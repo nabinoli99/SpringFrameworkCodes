@@ -22,7 +22,7 @@ public class TaskDAO {
 
     // Inside TaskDAO.java
     public void saveTask(Task task) {
-        // CHANGE THIS LINE: make sure it says :completed
+
         String sql = "INSERT into tasks (title, description, completed) VALUES (:title, :description, :completed)";
 
         SqlParameterSource params = new BeanPropertySqlParameterSource(task);
