@@ -1,10 +1,11 @@
-package in.nabin.springboot_project6;
+package in.nabin;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class SpringBootProject6Application {
+public class SpringBootProject6Application
+{
 
     public static void main(String[] args) {
         SpringApplication.run(SpringBootProject6Application.class, args);
