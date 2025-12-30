@@ -17,7 +17,7 @@ public class UserConfig
             public void run(String... args) throws Exception
             {
                 user1().display();
-                System.out.println("-----------------------------------------------");
+                System.out.println("-------------------------------------------------");
                 user2().display();
 
             }
