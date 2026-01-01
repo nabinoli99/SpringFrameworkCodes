@@ -21,28 +21,76 @@ public class SpringBootProject18Application implements CommandLineRunner {
 
 
 
-//        INSERTION PART
-        User user1 = new User();
-        user1.setName("Nabin");
-        user1.setEmail("enimnabin@gmail.com");
-        user1.setGender("Male");
-        user1.setCity("Kathmandu");
+//        <------------------INSERTION PART---------------->
+//        User user1 = new User();
+//        user1.setName("Nabin");
+//        user1.setEmail("enimnabin@gmail.com");
+//        user1.setGender("Male");
+//        user1.setCity("Kathmandu");
+//
+//
+//        User user2 = new User();
+//        user2.setName("Nabkiran");
+//        user2.setEmail("nabkiran12@gmail.com");
+//        user2.setGender("Male");
+//        user2.setCity("Rolpa");
+//        boolean status = userDAO.insertUser(user1);
+//
+//        if(status)
+//        {
+//            System.out.println("User Inserted successfullly");
+//        }
+//        else
+//        {
+//            System.out.println("User not inserted due to some error ");
+//        }
 
 
-        User user2 = new User();
-        user2.setName("Nabkiran");
-        user2.setEmail("nabkiran12@gmail.com");
-        user2.setGender("Male");
-        user2.setCity("Rolpa");
-        boolean status = userDAO.insertUser(user1);
 
+//        ------------------UPDATION-------------------
+//        User user3 = new User();
+//        user3.setName("Nabkiran");
+//        user3.setEmail("nabkiran12@gmail.com");
+//        user3.setGender("Male");
+//        user3.setCity("Tulsipur");
+//       boolean status = userDAO.UpdateUser(user3);
+//
+//       if(status)
+//       {
+//           System.out.println("Updation Successfull");
+//       }
+//       else
+//       {
+//           System.out.println("Updation Unsuccessful due to some eror ");
+//       }
+//    }  User user3 = new User();
+//        user3.setName("Nabkiran");
+//        user3.setEmail("nabkiran12@gmail.com");
+//        user3.setGender("Male");
+//        user3.setCity("Tulsipur");
+//       boolean status = userDAO.UpdateUser(user3);
+//
+//       if(status)
+//       {
+//           System.out.println("Updation Successfull");
+//       }
+//       else
+//       {
+//           System.out.println("Updation Unsuccessful due to some eror ");
+//       }
+
+
+//        ------------DELETION PORTION
+
+        boolean status = userDAO.DeleteUserByEmail("sneha.gurung77@gmail.com");
         if(status)
         {
-            System.out.println("User Inserted successfullly");
+            System.out.println("Deletion Success");
         }
         else
         {
-            System.out.println("User not inserted due to some error ");
+            System.out.println("Deletion Unsuccess");
         }
+
     }
 }
