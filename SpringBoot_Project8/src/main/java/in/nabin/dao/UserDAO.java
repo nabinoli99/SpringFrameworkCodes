@@ -1,6 +1,7 @@
 package in.nabin.dao;
 
 import in.nabin.entity.User;
+import in.nabin.mapper.UserRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -16,22 +17,22 @@ public class UserDAO {
 	@Autowired
 	private JdbcTemplate jdbctemplate;
 
-	// ---------------- INSERT ----------------
-//	public boolean insertUser(User user) {
-//		boolean status = false;
-//		try {
-//			String INSERT_SQL_QUERY = "INSERT INTO USERS (name,email,gender,city) VALUES (?,?,?,?)";
-//			int count = jdbctemplate.update(INSERT_SQL_QUERY,
-//					user.getName(),
-//					user.getEmail(),
-//					user.getGender(),
-//					user.getCity());
-//			status = count > 0;
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//		return status;
-//	}
+//	 ---------------- INSERT ----------------
+	public boolean insertUser(User user) {
+		boolean status = false;
+		try {
+			String INSERT_SQL_QUERY = "INSERT INTO USERS (name,email,gender,city) VALUES (?,?,?,?)";
+			int count = jdbctemplate.update(INSERT_SQL_QUERY,
+					user.getName(),
+					user.getEmail(),
+					user.getGender(),
+					user.getCity());
+			status = count > 0;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return status;
+	}
 
 	// ---------------- UPDATE ----------------
 	public boolean UpdateUser(User user) {
@@ -51,17 +52,17 @@ public class UserDAO {
 	}
 
 	// ---------------- DELETE ----------------
-//	public boolean DeleteUserByEmail(String email) {
-//		boolean status = false;
-//		try {
-//			String DELETE_SQL_QUERY = "DELETE FROM USERS WHERE email = ?";
-//			int count = jdbctemplate.update(DELETE_SQL_QUERY, email);
-//			status = count > 0;
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//		return status;
-//	}
+	public boolean DeleteUserByEmail(String email) {
+		boolean status = false;
+		try {
+			String DELETE_SQL_QUERY = "DELETE FROM USERS WHERE email = ?";
+			int count = jdbctemplate.update(DELETE_SQL_QUERY, email);
+			status = count > 0;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return status;
+	}
 
 	// ---------------- READ ----------------
 	public User getUserByEmail(String email) {
@@ -75,15 +76,5 @@ public class UserDAO {
 		return jdbctemplate.query(SELECT_SQL_QUERY,new UserRowMapper());
 	}
 	// ---------------- ROW MAPPER ----------------
-	private static final class UserRowMapper implements RowMapper<User> {
-		@Override
-		public User mapRow(ResultSet rs, int rowNum) throws SQLException {
-			User user = new User();
-			user.setName(rs.getString("name"));
-			user.setEmail(rs.getString("email"));
-			user.setGender(rs.getString("gender"));
-			user.setCity(rs.getString("city"));
-			return user;
-		}
-	}
+
 }
