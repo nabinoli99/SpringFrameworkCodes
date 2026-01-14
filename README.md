@@ -1,6 +1,6 @@
-# 🌱 Spring Framework Practice Programs
+# 🌱 Spring Framework/SpringBoot Practice Programs
 
-**Welcome to my Spring Framework practice repository!**
+**Welcome to my Spring Framework and SpringBoot practice repository!**
 
 This repo contains simple Spring framework programs and mini‐projects I built to learn and reinforce core concepts of the Spring ecosystem.
 
