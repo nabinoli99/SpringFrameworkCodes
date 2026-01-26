@@ -113,7 +113,7 @@ public class App
 //           user.setCity("Pokhara");
 //            session.saveOrUpdate(user);
 //            transaction.commit();
-//            System.out.println("USER DETAILS ADDED SUCCESSFULLY");
+//            System.out.println("USER DETAILS UPDATED SUCCESSFULLY");
 //       }
 //        catch (Exception e)
 //       {

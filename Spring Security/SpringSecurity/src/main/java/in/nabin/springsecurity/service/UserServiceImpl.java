@@ -66,6 +66,7 @@ public class UserServiceImpl implements UserService , UserDetailsService {
         return userRepo.findByUsername(username);
     }
 
+
 // Get all role from the username argument
     @Override
     public List<User> getUsers() {
