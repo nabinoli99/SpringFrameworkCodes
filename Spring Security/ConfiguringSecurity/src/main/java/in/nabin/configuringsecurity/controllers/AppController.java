@@ -46,6 +46,4 @@ public class AppController
         list.add(employee);
     }
 
-    @GetMapping("/csrf")
-    public CsrfToken session ()
 }
