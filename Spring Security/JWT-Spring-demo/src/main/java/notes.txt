@@ -1,0 +1,384 @@
+---
+# 🎯 What we are building (clear target)
+
+A **Spring Boot + Spring Security + JWT** app where:
+
+1. User opens browser
+2. Logs in via **HTML page**
+3. Server returns **JWT**
+4. Browser stores JWT
+5. Browser calls secured API using JWT
+6. Server validates JWT and returns data
+
+👉 **Stateless, no session, no formLogin**
+
+---
+
+# 🧱 Project structure (mental picture)
+
+```
+spring-jwt-demo
+ ├── config
+ │    ├── SecurityConfig.java
+ │    └── JwtFilter.java
+ ├── controller
+ │    ├── AuthController.java
+ │    └── HelloController.java
+ ├── util
+ │    └── JwtUtil.java
+ ├── model
+ │    └── AuthRequest.java
+ └── SpringJwtDemoApplication.java
+```
+
+---
+
+# 🟢 STEP 1: Dependencies (important but simple)
+
+**pom.xml**
+
+```xml
+<dependencies>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-security</artifactId>
+    </dependency>
+
+    <dependency>
+        <groupId>io.jsonwebtoken</groupId>
+        <artifactId>jjwt-api</artifactId>
+        <version>0.11.5</version>
+    </dependency>
+
+    <dependency>
+        <groupId>io.jsonwebtoken</groupId>
+        <artifactId>jjwt-impl</artifactId>
+        <version>0.11.5</version>
+        <scope>runtime</scope>
+    </dependency>
+
+    <dependency>
+        <groupId>io.jsonwebtoken</groupId>
+        <artifactId>jjwt-jackson</artifactId>
+        <version>0.11.5</version>
+        <scope>runtime</scope>
+    </dependency>
+</dependencies>
+```
+
+📌 This gives us **JWT creation + validation**
+
+---
+
+# 🟢 STEP 2: JWT Utility (core logic)
+
+👉 This class **creates and validates tokens**
+
+### `JwtUtil.java`
+
+```java
+@Component
+public class JwtUtil {
+
+    private final String SECRET_KEY = "my-secret-key-12345";
+
+    public String generateToken(String username) {
+        return Jwts.builder()
+                .setSubject(username)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 10)) // 10 min
+                .signWith(Keys.hmacShaKeyFor(SECRET_KEY.getBytes()), SignatureAlgorithm.HS256)
+                .compact();
+    }
+
+    public String extractUsername(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(SECRET_KEY.getBytes())
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .getSubject();
+    }
+
+    public boolean isTokenValid(String token) {
+        try {
+            extractUsername(token);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+}
+```
+
+🧠 **Understand this**
+
+* `generateToken()` → creates JWT
+* `extractUsername()` → reads payload
+* `isTokenValid()` → signature + expiry check
+
+---
+
+# 🟢 STEP 3: Login API (browser will call this)
+
+### `AuthRequest.java`
+
+```java
+package in.nabin.jwtspringdemo.model;
+
+import ch.qos.logback.classic.net.SimpleSSLSocketServer;
+
+public class AuthRequest
+{
+    private String username;
+    public String password;
+
+    public AuthRequest(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+}
+
+```
+
+---
+
+### `AuthController.java`
+
+```java
+@RestController
+public class AuthController {
+
+    @Autowired
+    private JwtUtil jwtUtil;
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody AuthRequest request) {
+
+        // HARD-CODED user (for learning)
+        if ("nabin".equals(request.username) && "1234".equals(request.password)) {
+
+            String token = jwtUtil.generateToken(request.username);
+
+            return ResponseEntity.ok(Map.of("token", token));
+        }
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    }
+}
+```
+
+📌 **Key point**
+
+* No session
+* No SecurityContext yet
+* Just verifying credentials & returning JWT
+
+---
+
+# 🟢 STEP 4: Secured API (needs JWT)
+
+### `HelloController.java`
+
+```java
+@RestController
+public class HelloController {
+
+    @GetMapping("/hello")
+    public String hello() {
+        return "Hello, you accessed a secured API!";
+    }
+}
+```
+
+---
+
+# 🟢 STEP 5: JWT Filter (THIS IS THE HEART ❤️)
+
+This runs **before controller**
+
+### `JwtFilter.java`
+
+```java
+@Component
+public class JwtFilter extends OncePerRequestFilter {
+
+    @Autowired
+    private JwtUtil jwtUtil;
+
+    @Override
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    FilterChain filterChain)
+            throws ServletException, IOException {
+
+        String authHeader = request.getHeader("Authorization");
+
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+
+            String token = authHeader.substring(7);
+
+            if (jwtUtil.isTokenValid(token)) {
+
+                String username = jwtUtil.extractUsername(token);
+
+                UsernamePasswordAuthenticationToken auth =
+                        new UsernamePasswordAuthenticationToken(
+                                username, null, List.of());
+
+                SecurityContextHolder.getContext().setAuthentication(auth);
+            }
+        }
+
+        filterChain.doFilter(request, response);
+    }
+}
+```
+
+🧠 **Flow here**
+
+1. Read header
+2. Extract token
+3. Validate
+4. Set Authentication
+
+---
+
+# 🟢 STEP 6: Security Configuration (stateless)
+
+### `SecurityConfig.java`
+
+```java
+@Configuration
+@EnableWebSecurity
+public class SecurityConfig {
+
+    @Autowired
+    private JwtFilter jwtFilter;
+
+    @Bean
+    SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+
+        http
+            .csrf(csrf -> csrf.disable())
+            .sessionManagement(sm ->
+                sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/login", "/index.html").permitAll()
+                .anyRequest().authenticated()
+            )
+            .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+
+        return http.build();
+    }
+}
+```
+
+📌 **Important**
+
+* Stateless
+* No formLogin
+* JWT filter added
+
+---
+
+# 🟢 STEP 7: Browser HTML (NO POSTMAN ❌)
+
+### `index.html` (put in `resources/static`)
+
+```html
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>Login</h2>
+<input id="username" placeholder="username"><br>
+<input id="password" type="password" placeholder="password"><br>
+<button onclick="login()">Login</button>
+
+<h2>Call Secured API</h2>
+<button onclick="callApi()">Call /hello</button>
+
+<pre id="result"></pre>
+
+<script>
+let token = "";
+
+function login() {
+    fetch("/login", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+            username: document.getElementById("username").value,
+            password: document.getElementById("password").value
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        token = data.token;
+        document.getElementById("result").innerText = "JWT: " + token;
+    });
+}
+
+function callApi() {
+    fetch("/hello", {
+        headers: {
+            "Authorization": "Bearer " + token
+        }
+    })
+    .then(res => res.text())
+    .then(data => {
+        document.getElementById("result").innerText = data;
+    });
+}
+</script>
+
+</body>
+</html>
+```
+
+---
+
+# ✅ FINAL FLOW (say this aloud)
+
+1. Browser → `/login`
+2. Server → JWT
+3. Browser stores JWT
+4. Browser → `/hello` with `Authorization`
+5. JWT Filter validates
+6. Controller runs
+
+🔥 **This is real JWT authentication**
+
+---
+
+## Next (only ONE step)
+
+Tell me what you want next:
+1️⃣ Understand filter execution order
+2️⃣ Replace hard-coded user with DB
+3️⃣ Add role-based authorization
+4️⃣ JWT expiration + refresh token
+
+We move only when **this feels clear**.
