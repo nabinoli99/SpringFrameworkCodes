@@ -2,9 +2,7 @@ package in.nabin.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -21,22 +19,31 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
+    // In SecurityConfig
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/user").hasAnyRole("USER","ADMIN")
+                        .requestMatchers("/logout").permitAll()  // Allow logout without auth
                         .anyRequest().authenticated())
-                .httpBasic(Customizer.withDefaults());
+                .httpBasic(Customizer.withDefaults())
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessHandler((request, response, authentication) -> {
+                            response.setStatus(200);
+                            response.setHeader("WWW-Authenticate", "Basic realm=\"Realm\"");
+                            response.getWriter().write("Logged out! Refresh to login again.");
+                        })
+                        .invalidateHttpSession(true)
+                        .clearAuthentication(true));
         return http.build();
     }
 
     @Bean
-    public UserDetailsService userDetailsService(PasswordEncoder encoder)
-    {
+    public UserDetailsService userDetailsService(PasswordEncoder encoder) {
         UserDetails admin = User.withUsername("nabkiran")
-                .password(encoder.encode("nbko")) // {noop} for plain text in dev
+                .password(encoder.encode("nbko"))
                 .roles("ADMIN")
                 .build();
 
@@ -44,7 +51,8 @@ public class SecurityConfig {
                 .password(encoder.encode("nbo"))
                 .roles("USER")
                 .build();
-        return new InMemoryUserDetailsManager(admin,user);
+
+        return new InMemoryUserDetailsManager(admin, user);
     }
 
     @Bean
